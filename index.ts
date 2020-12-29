@@ -1,6 +1,6 @@
 const w : number = window.innerWidth 
 const h : number = window.innerHeight 
-const parts : number = 4 
+const parts : number = 3
 const scGap : number = 0.02 / parts 
 const strokeFactor : number = 90 
 const delay : number = 20 
@@ -41,7 +41,10 @@ class DrawingUtil {
     static drawEndingLine(context : CanvasRenderingContext2D, x : number, y : number, sc1 : number, sc2 : number, i : number) {
         const sc1i : number = ScaleUtil.divideScale(sc1, i, parts)
         const sc2i : number = ScaleUtil.divideScale(sc2, i, parts)
-        DrawingUtil.drawLine(context, x * sc2i, y * sc2i, x * sc1i, y * sc2i)
+        if (sc1i == sc2i || (sc1i > 1 && sc2i > 1) || (sc1i < 0.1 && sc2i < 0.1)) {
+            return
+        }
+        DrawingUtil.drawLine(context, x * sc2i, y * sc2i, x * sc1i, y * sc1i)
     }
 
     static drawVLinerClose(context : CanvasRenderingContext2D, scale : number) {
