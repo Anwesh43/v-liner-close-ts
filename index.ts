@@ -28,3 +28,49 @@ class ScaleUtil {
         return Math.sin(scale * Math.PI)
     }
 }
+
+class DrawingUtil {
+    
+    static drawLine(context : CanvasRenderingContext2D, x1 : number, y1 : number, x2 : number, y2 : number) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
+    static drawEndingLine(context : CanvasRenderingContext2D, x : number, y : number, sc1 : number, sc2 : number, i : number) {
+        const sc1i : number = ScaleUtil.divideScale(sc1, i, parts)
+        const sc2i : number = ScaleUtil.divideScale(sc2, i, parts)
+        DrawingUtil.drawLine(context, x * sc2i, y * sc2i, x * sc1i, y * sc2i)
+    }
+
+    static drawVLinerClose(context : CanvasRenderingContext2D, scale : number) {
+        const size : number = Math.min(w, h) / sizeFactor 
+        const sc1 : number = ScaleUtil.divideScale(scale, 0, 2)
+        const sc2 : number = ScaleUtil.divideScale(scale, 1, 2)
+        context.save()
+        context.translate(w / 2, h)
+        for (var j = 0; j < 2; j++) {
+            context.save()
+            context.scale(1 - 2 * j, 1)
+            DrawingUtil.drawEndingLine(context, -size, -size, sc1, sc2, 0)
+            context.save()
+            context.translate(-size, -size)
+            DrawingUtil.drawEndingLine(context, -size, 0, sc1, sc2, 1)
+            context.restore()
+            context.save()
+            context.translate(-2 * size, -size)
+            DrawingUtil.drawEndingLine(context, 0, size, sc1, sc2, 2)
+            context.restore()
+            context.restore()
+        }
+        context.restore()
+    }
+
+    static drawVLCNode(context : CanvasRenderingContext2D, i : number, scale : number) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / strokeFactor 
+        context.strokeStyle = colors[i]
+        DrawingUtil.drawVLinerClose(context, scale)       
+    }
+}
