@@ -149,3 +149,45 @@ class Animator {
         }
     }
 }
+
+class VLCNode {
+
+    state : State = new State()
+    prev : VLCNode 
+    next : VLCNode 
+
+    constructor(private i : number) {
+        this.addNeighbor()
+    }
+
+    addNeighbor() {
+        if (this.i < colors.length - 1) {
+            this.next = new VLCNode(this.i + 1)
+            this.next.prev = this 
+        }
+    }
+    
+    draw(context : CanvasRenderingContext2D) {
+        DrawingUtil.drawVLCNode(context, this.i, this.state.scale)
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+
+    getNext(dir : number, cb : Function) : VLCNode {
+        var curr : VLCNode = this.prev 
+        if (dir == 1) {
+            curr = this.next 
+        }
+        if (curr) {
+            return curr 
+        }
+        cb()
+        return this 
+    }
+}
