@@ -214,3 +214,25 @@ class VLinerClose {
         this.curr.startUpdating(cb)
     }
 }
+
+class Renderer {
+
+    vlc : VLinerClose = new VLinerClose()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.vlc.draw(context)
+    } 
+
+    handleTap(cb : Function) {
+        this.vlc.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.vlc.update(() => {
+                    this.animator.stop()
+                    cb()
+                })
+            })
+        })
+    }
+}
